@@ -1,20 +1,18 @@
-from sys import stdin
-from typing import Dict
+import sys
+from pathlib import Path
 
-"""
-    Given two lists x, y of equal length n,
-    calculate the total similarity score where each score is calculated by
-    multiplying each number in x by the frequency of its occurrence in y.
+sys.path.append(str(Path(__file__).parent.parent))
+from custom_types import InputData
+from collections import Counter
 
-"""
 
-x = [list(map(int, line.split())) for line in stdin]
-left = sorted(elem[0] for elem in x)
-
-right_count: Dict[int, int] = {}
-
-for elem in x:
-    right_count[elem[1]] = right_count.get(elem[1], 0) + 1
-
-similarity = sum([x1 * right_count[x1] for x1 in left if x1 in right_count])
-print(similarity)
+def p2(data: InputData) -> int:
+    """
+        Given two lists x, y of equal length n,
+        calculate the total similarity score where each score is calculated by
+        multiplying each number in x by the frequency of its occurrence in y.
+    """
+    left, right = data
+    right_freq = Counter(right)
+    similarity = sum([x1 * right_freq[x1] for x1 in left if x1 in right_freq])
+    return similarity
