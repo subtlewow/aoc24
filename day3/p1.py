@@ -11,7 +11,6 @@ with open(base_path / "sample.txt") as f:
 
         for line in lines:
             integers = list(map(int, re.findall(r"\d+", line)))
-            print(integers)
             final += integers[0] * integers[1]
 
 print(final)
