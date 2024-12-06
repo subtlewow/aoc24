@@ -1,11 +1,6 @@
-import sys
-from pathlib import Path
+from typing import Tuple
 
-sys.path.append(str(Path(__file__).parent.parent))
-from custom_types import InputData
-
-
-def p1(data: InputData) -> int:
+def p1(data: Tuple[list[int], list[int]]) -> int:
     """
         Given two lists x, y of equal length n,
         find the total distance when elements are paired (xi, yi)
