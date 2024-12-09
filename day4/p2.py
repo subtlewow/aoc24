@@ -2,7 +2,7 @@ from pathlib import Path
 
 base_path = Path(__file__).parent
 
-def is_valid_point(x: int, y: int, n: int, m: int):
+def is_valid_point(x: int, y: int, n: int, m: int) -> bool:
     '''
     Checks if point (x,y) is within valid bounds.
 
@@ -13,12 +13,15 @@ def is_valid_point(x: int, y: int, n: int, m: int):
 
     return 0 <= x < n and 0 <= y < m
 
-def upper_left_to_lower_diagonal(grid: list[str], posX: int, posY: int):
+def is_valid_mas_string(s: str) -> bool:
+    return len(s) == 3 and s in ['SAM', 'MAS']
+
+def get_diagonal_string(grid: list[str], posX: int, posY: int, pos: int = 1) -> str:
     combinations = [-1, 0, 1]
     temp = []
 
     for i in combinations:
-        new_x = posX+i
+        new_x = posX+(i*pos)
         new_y = posY+i
 
         if not is_valid_point(new_x, new_y, len(grid), len(grid[0])):
@@ -26,52 +29,21 @@ def upper_left_to_lower_diagonal(grid: list[str], posX: int, posY: int):
 
         temp.append(grid[new_x][new_y])
 
-    print("left: ", temp, (new_x, new_y))
-
     return "".join(temp)
 
-def lower_left_to_upper_diagonal(grid: list[str], posX: int, posY: int):
-    combinations = [1, 0, -1]
-    temp = []
+def compare_diagonals(grid: list[str], x: int, y: int) -> int:
+    right = get_diagonal_string(grid, x, y)
+    left = get_diagonal_string(grid, x, y, -1)
 
-    for i in combinations:
-        new_x = posX+i
-        new_y = posY-i
+    if not (is_valid_mas_string(left) and  is_valid_mas_string(right)):
+        return 0
 
-        if not is_valid_point(new_x, new_y, len(grid), len(grid[0])):
-            return ""
+    is_matching_pattern = (
+        left == right or # left == right and left[::-1] == right[::-1] are equivalent
+        left == right[::-1] # left == right[::-1] and right == left[::-1] are equivalent
+    )
 
-        temp.append(grid[new_x][new_y])
-
-    print("right: ", temp, (new_x, new_y))
-
-    return "".join(temp)
-
-def compare_diagonals(grid: list[str], x: int, y: int):
-    rows, cols = len(grid), len(grid[0])
-    count = 0
-
-    if not is_valid_point(x, y, rows, cols):
-        return False
-
-    left = upper_left_to_lower_diagonal(grid, x, y)
-    right = lower_left_to_upper_diagonal(grid, x, y)
-
-    if len(left) == 3 and len(right) == 3 and left in ['SAM', 'MAS'] and right in ['SAM', 'MAS']:
-        if left == right:
-            count += 1
-
-        elif left == right[::-1]:
-            count += 1
-
-        elif left[::-1] == right:
-            count += 1
-
-        elif left[::-1] == right[::-1]:
-            count += 1
-
-    return count
-
+    return 1 if is_matching_pattern else 0
 
 def check_for_xmas_directions(grid: list[str], x: int, y: int):
     '''
@@ -96,7 +68,7 @@ def check_for_xmas_directions(grid: list[str], x: int, y: int):
 
     return final
 
-def grid_search(grid: list[str]):
+def grid_search(grid: list[str]) -> int:
     rows, cols = len(grid), len(grid[0])
     count = 0
 
@@ -110,4 +82,4 @@ def grid_search(grid: list[str]):
 with open(base_path / "sample.txt") as f:
     grid = [line.strip('\n') for line in f]
     x = grid_search(grid)
-    print(f"XMAS appears: {x} times")
+    print(f"X-MAS appears: {x} times")
