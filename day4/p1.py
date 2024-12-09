@@ -3,13 +3,13 @@ from pathlib import Path
 base_path = Path(__file__).parent
 
 def is_valid_point(x: int, y: int, n: int, m: int):
-    """
+    '''
     Checks if point (x,y) is within valid bounds.
 
     Args:
     - n: rows (int)
     - m: cols (int)
-    """
+    '''
 
     return 0 <= x < n and 0 <= y < m
 
@@ -17,14 +17,15 @@ def check_for_xmas_directions(grid: list[str], x: int, y: int):
     '''
         {
             - only perform search if X from XMAS is found, then build strings, append to list then .join().
-            - x is inclusive so itll be x+3 instead of x+4
 
             forward: (x, y+4)
             backward: (x, y-4)
             down: (x+4, y)
             up: (x-4, y)
-            diag_left_to_right: (x+4, y+4)
-            diag_right_to_left: (x-4, y-4)
+            diag_bottom_right: (x+4, y+4)
+            diag_top_left: (x-4, y-4)
+            diag_top_right: (x-4, y+4)
+            diag_bottom_left: (x+4, y-4)
         }
 
     '''
@@ -46,7 +47,6 @@ def check_for_xmas_directions(grid: list[str], x: int, y: int):
 
             temp.append(grid[new_x][new_y])
 
-        # print("")
         if len(temp) == 4 and "".join(temp) == 'XMAS':
             final += 1
 
