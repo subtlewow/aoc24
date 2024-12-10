@@ -5,15 +5,22 @@ base_path = Path(__file__).parent
 
 ordering_rules = []
 page_numbers = []
-update = False
+blank = False
+
+def is_subset(subarr: list[int], arr: list[int]):
+    return all(x in arr for x in subarr)
+
+def find_middle(arr: list[int]):
+    # guaranteed to be odd length
+    return arr[len(arr) // 2]
 
 with open(base_path / "sample.txt") as f:
     for line in f:
         if line == '\n':
-            update = True
+            blank = True
             continue
 
-        if update:
+        if blank:
             page_numbers.append(line)
         else:
             ordering_rules.append(line)
@@ -28,27 +35,25 @@ rules = defaultdict(list)
 for a, b in parsed_int_ordering_rules:
     rules[a].append(b)
 
-# print(sorted(parsed_int_ordering_rules))
-print(rules)
-print(parsed_page_numbers)
-
 valid = []
 
-
 for update in parsed_page_numbers:
-    is_valid = True
+    count = 0
 
     for i, page_number in enumerate(update):
-        if i+1 < len(update) and page_number in rules:
-            next_number = update[i+1]
-            order = rules[page_number]
+        subarr = update[i+1:] if i+1 < len(update) else []
+        arr = rules[page_number]
 
-            if next_number not in order:
-                is_valid = False
-                break
+        if is_subset(subarr, arr):
+            count += 1
+        else:
+            break
 
-    if is_valid:
+    if count == len(update):
         valid.append(update)
 
+ans = 0
+for arr in valid:
+    ans += find_middle(arr)
 
-print(valid)
+print(f"Sum of middle-page numbers: {ans}")
