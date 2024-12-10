@@ -1,0 +1,3 @@
+- writing python w a focus on writing functional code
+- exploring the walrus operator, lambda functions and pathlib
+- more to come.
