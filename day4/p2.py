@@ -35,7 +35,7 @@ def compare_diagonals(grid: list[str], x: int, y: int) -> int:
     right = get_diagonal_string(grid, x, y)
     left = get_diagonal_string(grid, x, y, -1)
 
-    if not (is_valid_mas_string(left) and  is_valid_mas_string(right)):
+    if not (is_valid_mas_string(left) and is_valid_mas_string(right)):
         return 0
 
     is_matching_pattern = (
