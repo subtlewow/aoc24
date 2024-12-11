@@ -27,7 +27,7 @@ with open(base_path / "sample.txt") as f:
 parsed_int_ordering_rules = [list(map(int, rule.strip('\n').split('|'))) for rule in ordering_rules]
 parsed_page_numbers = [list(map(int, line.strip('\n').split(','))) for line in page_numbers]
 
-print(parsed_int_ordering_rules)
+# print(parsed_int_ordering_rules)
 
 k, v = zip(*parsed_int_ordering_rules)
 
