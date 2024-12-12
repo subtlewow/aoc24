@@ -20,4 +20,4 @@
 - p2: will admit took me longer that it'd like to admit... initial attempt involved working backwards and building contiguous subarrays and checking if the rules applied, clearly that didn't work for various reasons. had to use gpt for a few points of feedback on my code and initial attempt, scraped that and went down the elementwise comparison route; 3-4 hours.
 
 [day6](https://adventofcode.com/2024/day/6):
-- p1: another familiar and simple one. involved moving in 4 dimensions, rotating clockwise between adjacent directions whenever a boundary was hit, count total number of Xs. spent a bit of time debugging, forgot to mark the starting pos 😛. code is a bit messy will need refactoring - didn't do things as efficiently as i wouldve liked; 30 mins.
+- [p1](day6/p1.py): another familiar and simple one. involved moving in 4 dimensions, rotating clockwise between adjacent directions whenever a boundary was hit, count total number of Xs. spent a bit of time debugging, forgot to mark the starting pos 😛. code is a bit messy will need refactoring - didn't do things as efficiently as i wouldve liked; 30 mins.
