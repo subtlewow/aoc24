@@ -60,7 +60,6 @@ for update in parsed_page_numbers:
 
 # search through the keys, find where 75 exists, grab the key, then look for tha tkey in the update array.
 # swap current position with 75.
-# print(invalid)
 
 final = []
 for update in invalid:
@@ -88,8 +87,6 @@ for update in invalid:
                         break
 
     final.append(update)
-
-# print(final)
 
 ans = 0
 for arr in final:

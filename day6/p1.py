@@ -1,8 +1,3 @@
-'''
-    Rules:
-    - If there is something directly in front of you (#), turn right 90 degrees.
-    - Otherwise, take a step forward.
-'''
 from pathlib import Path
 
 def find_starting(arr: list[list[str]]):
@@ -30,13 +25,8 @@ in_bounds = True
 valid_count = 0
 
 while in_bounds:
-    if k > 3:
-        k = 0
-
+    k = k % len(directions) # handling overflow
     dx, dy = directions[k]
-
-    if not validate_bounds(x+dx, y+dy, n, m):
-        break
 
     while x < n and y < m:
         if validate_bounds(x+dx, y+dy, n, m) and grid[x+dx][y+dy] == '#':
