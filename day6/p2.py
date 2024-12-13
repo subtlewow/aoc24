@@ -16,49 +16,53 @@ with open(base_path / "sample.txt") as f:
 n, m = len(grid), len(grid[0])
 start_x, start_y = find_starting(grid)
 
-grid[start_x][start_y] = 'X'
-
 directions = [(-1,0), (0,1), (1,0), (0,-1)]
 
-def generate_grid(start_x, start_y, grid):
+def simulate_grid(grid, start_x, start_y, obs_x, obs_y):
+    test_grid = [row[:] for row in grid] # deepcopy of grid
+
+    if test_grid[obs_x][obs_y] != '.' or (start_x == obs_x and start_y == obs_y):
+        return False
+
+    test_grid[obs_x][obs_y] = '#'
+
+    return find_cycle(start_x, start_y, test_grid)
+
+def find_cycle(start_x, start_y, grid):
     k = 0
     x, y = start_x, start_y
 
     # track (x, y, current direction) for every point visited.
     visited_states = set()
-    visited_states.add((x,y,k))
 
     while True:
+        current_state = (x,y,k)
+        if current_state in visited_states:
+            return True
+
+        visited_states.add(current_state)
+
         dx, dy = directions[k % len(directions)]
 
         next_x = x + dx
         next_y = y + dy
 
         if not validate_bounds(next_x, next_y, n, m):
-            break
+            return False
 
         if grid[next_x][next_y] == '#':
             k = (k+1) % len(directions)
-
-            if (x,y,k) in visited_states:
-                return True
         else:
             x, y = next_x, next_y
 
-            if (x,y,k) in visited_states:
-                return True
+        if len(visited_states) > n*m*len(directions):
+            return False
 
-            visited_states.add((x,y,k))
-            grid[x][y] = 'X'
-
-    return grid
-
-grid = generate_grid(start_x, start_y, grid)
-
+positions = []
 valid_count = 0
 for i in range(n):
     for j in range(m):
-        if grid[i][j] == 'X':
-            valid_count += 1
+        if simulate_grid(grid, start_x, start_y, i, j):
+            positions.append((i, j))
 
-print(valid_count)
+print(f"Number of positions: {len(positions)}")

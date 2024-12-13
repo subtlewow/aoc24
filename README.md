@@ -21,3 +21,4 @@
 
 [day6](https://adventofcode.com/2024/day/6):
 - [p1](day6/p1.py): another familiar and simple one. involved moving in 4 dimensions, rotating clockwise between adjacent directions whenever a boundary was hit, count total number of Xs. spent a bit of time debugging, forgot to mark the starting pos 😛. code is a bit messy will need refactoring - didn't do things as efficiently as i wouldve liked; 30 mins.
+- p2: found this one bit confusing. involved identifying potential cycles if a new obstacle was added. spent too much time investigating whether a non quadratic time was possible, ended up just accepting the longer runtime for the sake of my sanity lol; feeling tad bit defeated... - need to review ; 5-6 hours. 
