@@ -21,4 +21,7 @@
 
 [day6](https://adventofcode.com/2024/day/6):
 - [p1](day6/p1.py): another familiar and simple one. involved moving in 4 dimensions, rotating clockwise between adjacent directions whenever a boundary was hit, count total number of Xs. spent a bit of time debugging, forgot to mark the starting pos 😛. code is a bit messy will need refactoring - didn't do things as efficiently as i wouldve liked; 30 mins.
-- p2: found this one bit confusing. involved identifying potential cycles if a new obstacle was added. spent too much time investigating whether a non quadratic time was possible, ended up just accepting the longer runtime for the sake of my sanity lol; feeling tad bit defeated... - need to review ; 5-6 hours. 
+- p2: found this one bit confusing. involved identifying potential cycles if a new obstacle was added. spent too much time investigating whether a non quadratic time was possible, ended up just accepting the brute force for the sake of my sanity lol; feeling tad bit defeated... - need to review ; 5-6 hours. 
+
+day7
+- p1: took a bit of time cuz of debugging. kept overriding the main pointer (k) by constantly reassigning it as `k = k // 2`; fixed by assigning k to a temp variable then manipulating that value; silly mistakes - review ; 2-3 hours.
