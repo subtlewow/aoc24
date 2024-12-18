@@ -25,3 +25,4 @@
 
 day7
 - p1: took a bit of time cuz of debugging. kept overriding the main pointer (k) by constantly reassigning it as `k = k // 2`; fixed by assigning k to a temp variable then manipulating that value; silly mistakes - review ; 2-3 hours.
+- p2: confusing to say the least. going to come back to this one. will need to review.

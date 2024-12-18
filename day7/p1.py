@@ -11,7 +11,7 @@ test = list(map(int, a))
 numbers = [list(map(int, line)) for line in b]
 
 
-def mixture(arr: list[int], expected: int):
+def mixture(arr: list[int], expected: int) -> bool:
     n = len(arr)
 
     num_combinations = 2 ** (n - 1)
@@ -23,7 +23,7 @@ def mixture(arr: list[int], expected: int):
 
         # define the combination of operations
         temp = k
-        for _ in range(n - 1):
+        for i in range(n - 1):
             if temp % 2 == 0:
                 curr_combo.append("+")
             else:
@@ -31,11 +31,20 @@ def mixture(arr: list[int], expected: int):
             temp //= 2
 
         # evaluate in order w/ operators
+        str_ans = ""
+        str_expected = str(expected)
         for i in range(n - 1):
+            str_ans += str(ans)
+
             if curr_combo[i] == "+":
                 ans += arr[i + 1]
             else:
                 ans *= arr[i + 1]
+
+            if str_ans == str_expected:
+                return True
+
+        print(ans)
 
         if ans == expected:
             return True
@@ -52,7 +61,7 @@ for i in range(m):
     actual = 1
     res = 0
 
-    if mixture(numbers[i], expected) or sum(numbers[i]) == expected:
+    if mixture(numbers[i], expected):
         real.append(expected)
 
 print(sum(real))
