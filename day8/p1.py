@@ -12,7 +12,6 @@ with open(base_path / "sample.txt") as f:
 
 n, m = len(lines), len(lines[0])
 
-
 def is_valid(i: int, j: int, n: int, m: int) -> bool:
     """
     Checks if current coordinate is within bounds.
@@ -47,50 +46,80 @@ def is_antenna(item: str) -> bool:
         or (48 <= ascii_value <= 57)  # numbers 0-9
     )
 
+def detect_pairs(pair1, pair2):
+    return ord(pair1) == ord(pair2)
 
-def calculate_distance(i: int, j: int, k: int, l: int, lines: list[list[str]]) -> tuple[int, int]:
-    if i >= k:
-        return (i - k, j - l)
-    else:
-        return (k - i, l - j)
+
+def calculate_distance(i: int, j: int, k: int, l: int) -> tuple[int, int]:
+    return (abs(k - i), abs(l - j))
+
 
 def check_diagonals(i: int, j: int, lines: list[list[str]]):
-    # adjacent_pair = False
     n, m = len(lines), len(lines[0])
+    ans = 0
 
     x = 1
-    antenna = None
-    coords = set()
-    adjacent_pairs = set()
+    coords = []
+    adjacent_pairs = []
 
-    if is_antenna(lines[i][j]) and is_valid(i, j, n, m):
-        antenna = lines[i][j]
+    if not is_antenna(lines[i][j]):
+        return 0
 
-    if i + x < n:
-        if antenna and antenna in lines[i + x]:
-            dist_x, dist_y = calculate_distance(i, j, i + x, lines[i + x].index(antenna), lines)
-            adjacent_pairs.add(((i, j), (i + x, lines[i + x].index(antenna))))
-            coords.add((dist_x, dist_y))
-        else:
-            x += 1
+    antenna = lines[i][j]
+
+    while i + x < n:
+        curr_row = lines[i + x]
+
+        if antenna and antenna in curr_row:
+            dist_x, dist_y = calculate_distance(i, j, i + x, curr_row.index(antenna))
+            adjacent_pairs.append((i, j))
+            adjacent_pairs.append((i + x, curr_row.index(antenna)))
+            coords.append((dist_x, dist_y))
+
+        x += 1
 
     while coords:
-        dx, dy = coords.pop()
-        dx, dy = abs(dx), abs(dy)
+        dx, dy = coords.pop(0)
 
-        pair1, pair2 = adjacent_pairs.pop()
-        x1, y1 = pair1
-        x2, y2 = pair2
+        x1, y1 = adjacent_pairs.pop(0)
+        x2, y2 = adjacent_pairs.pop(0)
 
-        if y2 > y1:
+        # top right
+        if is_valid(x1+dx, y1+dy, n, m) and detect_pairs(lines[x1][y1], lines[x1+dx][y1+dy]):
+            # top left
+            if is_valid(x1-dx, y1-dy, n, m) and lines[x1-dx][y1-dy] != '#':
+                if lines[x1-dx][y1-dy] == '.':
+                    lines[x1-dx][y1-dy] = '#'
+                ans += 1
+
+        if is_valid(x2-dx, y2-dy, n, m) and detect_pairs(lines[x2][y2], lines[x2-dx][y2-dy]):
             # bottom right
-            if is_valid(+dx, j+dy, n, m) and lines[i+dx][j+dy] == '.':
-                lines[i+dx][j+dy] = '#'
+            if is_valid(x2+dx, y2+dy, n, m) and lines[x2+dx][y2+dy] != '#':
+                if lines[x2+dx][y2+dy] == '.':
+                    lines[x2+dx][y2+dy] = '#'
+                ans += 1
 
-        # upper right
-        if is_valid(i-dx, j+dy, n, m) and lines[i-dx][j+dy] == '.':
-            lines[i-dx][j+dy] = '#'
+        if is_valid(x1+dx, y1-dy, n, m) and detect_pairs(lines[x1][y1], lines[x1+dx][y1-dy]):
+            # top right
+            if is_valid(x1-dx, y1+dy, n, m) and lines[x1-dx][y1+dy] != '#':
+                if lines[x1-dx][y1+dy] == '.':
+                    lines[x1-dx][y1+dy] = '#'
 
+                ans += 1
+
+        if is_valid(x2-dx, y2+dy, n, m) and detect_pairs(lines[x2][y2], lines[x2-dx][y2+dy]):
+            # bottom left
+            if is_valid(x2+dx, y2-dy, n, m) and lines[x2+dx][y2-dy] != '#':
+                if lines[x2+dx][y2-dy] == '.':
+                    lines[x2+dx][y2-dy] = '#'
+                ans += 1
+    print(lines)
+
+    return ans
+
+ans = 0
 for i in range(n):
     for j in range(m):
-        check_diagonals(i, j, lines)
+        ans += check_diagonals(i, j, lines)
+
+print(ans)
