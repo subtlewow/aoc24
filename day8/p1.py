@@ -1,8 +1,3 @@
-# check if any two antennas are twice as far away as one another ie. 2:1 ratio
-# current[x-run][y+rise], current[x+run][y-rise] where (x-run, y-rise) are valid pts
-
-# from (x,y) to n (rows) => check if same antenna exists in list[i], if so, calculate manhatten distance (l1 norm)
-
 from pathlib import Path
 
 base_path = Path(__file__).parent
@@ -49,9 +44,45 @@ def is_antenna(item: str) -> bool:
 def detect_pairs(pair1, pair2):
     return ord(pair1) == ord(pair2)
 
-
 def calculate_distance(i: int, j: int, k: int, l: int) -> tuple[int, int]:
     return (abs(k - i), abs(l - j))
+
+def validate_diagonal(x1: int, y1: int, x2: int, y2: int, dx: int, dy: int, n: int, m: int, lines: list[list[str]]) -> int:
+    directions = [
+        ((1,1), (-1,-1)), # UL to LR diagonal (adj. 1)
+        ((-1,-1), (1,1)), # LR to UL diagonal (adj. 1)
+        ((1,-1), (-1,1)), # LL to UR diagonal (adj. 2)
+        ((-1,1), (1,-1))  # UR to LL diagonal (adj. 2)
+    ]
+    ans = 0
+
+    for dir1, dir2 in directions:
+        new_x1 = x1 + (dx * dir1[0])
+        new_x2 = x2 + (dx * dir2[0])
+
+        new_y1 = y1 + (dy * dir1[1])
+        new_y2 = y2 + (dy * dir2[1])
+
+        if is_valid(new_x1, new_y1, n, m) and detect_pairs(lines[x1][y1], lines[new_x1][new_y1]):
+            new_x1 = x1 + (dx * dir2[0])
+            new_y1 = y1 + (dy * dir2[1])
+
+            if is_valid(new_x1, new_y1, n, m) and lines[new_x1][new_y1] != '#':
+                if lines[new_x1][new_y1] == '.':
+                    lines[new_x1][new_y1] = '#'
+                ans += 1
+
+        if is_valid(new_x2, new_y2, n, m) and detect_pairs(lines[x2][y2], lines[new_x2][new_y2]):
+            new_x2 = x2 + (dx * dir1[0])
+            new_y2 = y2 + (dy * dir1[1])
+
+            if is_valid(new_x2, new_y2, n, m) and lines[new_x2][new_y2] != '#':
+                if lines[new_x2][new_y2] == '.':
+                    lines[new_x2][new_y2] = '#'
+                ans += 1
+
+    return ans
+
 
 
 def check_diagonals(i: int, j: int, lines: list[list[str]]):
@@ -84,36 +115,7 @@ def check_diagonals(i: int, j: int, lines: list[list[str]]):
         x1, y1 = adjacent_pairs.pop(0)
         x2, y2 = adjacent_pairs.pop(0)
 
-        # top right
-        if is_valid(x1+dx, y1+dy, n, m) and detect_pairs(lines[x1][y1], lines[x1+dx][y1+dy]):
-            # top left
-            if is_valid(x1-dx, y1-dy, n, m) and lines[x1-dx][y1-dy] != '#':
-                if lines[x1-dx][y1-dy] == '.':
-                    lines[x1-dx][y1-dy] = '#'
-                ans += 1
-
-        if is_valid(x2-dx, y2-dy, n, m) and detect_pairs(lines[x2][y2], lines[x2-dx][y2-dy]):
-            # bottom right
-            if is_valid(x2+dx, y2+dy, n, m) and lines[x2+dx][y2+dy] != '#':
-                if lines[x2+dx][y2+dy] == '.':
-                    lines[x2+dx][y2+dy] = '#'
-                ans += 1
-
-        if is_valid(x1+dx, y1-dy, n, m) and detect_pairs(lines[x1][y1], lines[x1+dx][y1-dy]):
-            # top right
-            if is_valid(x1-dx, y1+dy, n, m) and lines[x1-dx][y1+dy] != '#':
-                if lines[x1-dx][y1+dy] == '.':
-                    lines[x1-dx][y1+dy] = '#'
-
-                ans += 1
-
-        if is_valid(x2-dx, y2+dy, n, m) and detect_pairs(lines[x2][y2], lines[x2-dx][y2+dy]):
-            # bottom left
-            if is_valid(x2+dx, y2-dy, n, m) and lines[x2+dx][y2-dy] != '#':
-                if lines[x2+dx][y2-dy] == '.':
-                    lines[x2+dx][y2-dy] = '#'
-                ans += 1
-    print(lines)
+        ans += validate_diagonal(x1, y1, x2, y2, dx, dy, n, m, lines)
 
     return ans
 
@@ -122,4 +124,4 @@ for i in range(n):
     for j in range(m):
         ans += check_diagonals(i, j, lines)
 
-print(ans)
+print(f"Unique locations: {ans}")
